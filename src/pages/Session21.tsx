@@ -3,7 +3,7 @@ import { useGuests } from '../context/GuestContext';
 import { useNavigate } from 'react-router-dom';
 
 const hadiahSesi1 = [
-  { nama: 'Voucher 100k', jumlah: 90 },
+  { nama: 'Voucher 100k', jumlah: 80 },
   { nama: 'Voucher 300k', jumlah: 60 },
   { nama: 'Voucher 500k', jumlah: 15 },
   { nama: 'Shokz Bone Conduction OpenMove', jumlah: 6 },
@@ -23,25 +23,11 @@ const Session21: React.FC = () => {
   const [batchWinners, setBatchWinners] = useState<{ name: string, divisi: string, npp: string }[]>([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [randomNames, setRandomNames] = useState<string[]>(Array(BATCH_SIZE).fill(''));
+  const [shokzWinners, setShokzWinners] = useState<(null | { name: string, divisi: string, npp: string })[]>([]);
+  const [shokzSpinning, setShokzSpinning] = useState<boolean[]>([]);
+  const [shokzRandomNames, setShokzRandomNames] = useState<string[]>([]);
+  const [shokzIntervalIds, setShokzIntervalIds] = useState<(NodeJS.Timeout | null)[]>([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    loadGuestsFromLocalStorage();
-  }, []);
-
-  useEffect(() => {
-    setGuestList(guests);
-  }, [guests]);
-
-  // Reset state saat pindah hadiah
-  useEffect(() => {
-    setBatchIndex(0);
-    setWinners([]);
-    setBatchWinners([]);
-    const currentHadiah = getCurrentHadiah();
-    const batchSize = currentHadiah ? getBatchSize(currentHadiah.jumlah) : BATCH_SIZE;
-    setRandomNames(Array(batchSize).fill(''));
-  }, [hadiahIndex]);
 
   const getCurrentHadiah = () => {
     if (hadiahIndex >= hadiahSesi1.length) {
@@ -56,10 +42,35 @@ const Session21: React.FC = () => {
     return Math.ceil(currentHadiah.jumlah / batchSize);
   };
 
+  const currentHadiah = getCurrentHadiah();
+
+  useEffect(() => {
+    loadGuestsFromLocalStorage();
+  }, []);
+
+  useEffect(() => {
+    setGuestList(guests);
+  }, [guests]);
+
+  // Reset state saat pindah hadiah
+  useEffect(() => {
+    setBatchIndex(0);
+    setWinners([]);
+    setBatchWinners([]);
+    const batchSize = currentHadiah ? getBatchSize(currentHadiah.jumlah) : BATCH_SIZE;
+    setRandomNames(Array(batchSize).fill(''));
+    if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove ') {
+      setShokzWinners(Array(currentHadiah.jumlah).fill(null));
+      setShokzSpinning(Array(currentHadiah.jumlah).fill(false));
+      setShokzRandomNames(Array(currentHadiah.jumlah).fill(''));
+      setShokzIntervalIds(Array(currentHadiah.jumlah).fill(null));
+    }
+  }, [hadiahIndex]);
+
   const drawBatchWinners = () => {
     const currentHadiah = getCurrentHadiah();
     if (!currentHadiah) return [];
-    
+
     let remainingGuests = [...guestList];
     const selected: { name: string, divisi: string, npp: string }[] = [];
     const batchSize = getBatchSize(currentHadiah.jumlah);
@@ -122,7 +133,6 @@ const Session21: React.FC = () => {
     setWinners(prev => [...prev, ...batchWinners]);
     setBatchIndex(batchIndex + 1);
     setBatchWinners([]);
-    const currentHadiah = getCurrentHadiah();
     const batchSize = currentHadiah ? getBatchSize(currentHadiah.jumlah) : BATCH_SIZE;
     setRandomNames(Array(batchSize).fill(''));
   };
@@ -132,19 +142,88 @@ const Session21: React.FC = () => {
     setBatchIndex(0);
     setWinners([]);
     setBatchWinners([]);
-    const currentHadiah = getCurrentHadiah();
     const batchSize = currentHadiah ? getBatchSize(currentHadiah.jumlah) : BATCH_SIZE;
     setRandomNames(Array(batchSize).fill(''));
+  };
+
+  // Handler klik box untuk undian per box Shokz
+  const handleShokzBoxClick = (idx: number) => {
+    if (shokzSpinning[idx]) {
+      if (shokzIntervalIds[idx]) clearInterval(shokzIntervalIds[idx]!);
+      // Pilih pemenang acak
+      let remaining = [...guestList];
+      shokzWinners.forEach((w, i) => {
+        if (w && i !== idx) remaining = remaining.filter(g => g.name !== w.name);
+      });
+      const winner = remaining[Math.floor(Math.random() * remaining.length)];
+      if (winner) {
+        setShokzWinners(prev => {
+          const updated = [...prev];
+          updated[idx] = winner;
+          return updated;
+        });
+        setGuestList(remaining.filter(g => g.name !== winner.name));
+        setGuests(remaining.filter(g => g.name !== winner.name));
+        localStorage.setItem('guests', JSON.stringify(remaining.filter(g => g.name !== winner.name)));
+        removeGuest(winner.name);
+        setShokzRandomNames(prev => {
+          const updated = [...prev];
+          updated[idx] = winner.name;
+          return updated;
+        });
+      }
+      setShokzSpinning(prev => {
+        const updated = [...prev];
+        updated[idx] = false;
+        return updated;
+      });
+      setShokzIntervalIds(prev => {
+        const updated = [...prev];
+        updated[idx] = null;
+        return updated;
+      });
+      return;
+    }
+    // Jika sudah ada nama (dan tidak sedang spin), klik = undi ulang (spin ulang)
+    if (shokzWinners[idx] && !shokzSpinning[idx]) {
+      setShokzWinners(prev => {
+        const updated = [...prev];
+        updated[idx] = null;
+        return updated;
+      });
+      setShokzRandomNames(prev => {
+        const updated = [...prev];
+        updated[idx] = '';
+        return updated;
+      });
+    }
+    // Mulai spin
+    setShokzSpinning(prev => {
+      const updated = [...prev];
+      updated[idx] = true;
+      return updated;
+    });
+    const spinInterval = setInterval(() => {
+      setShokzRandomNames(prev => {
+        const updated = [...prev];
+        updated[idx] = guestList[Math.floor(Math.random() * guestList.length)]?.name || '';
+        return updated;
+      });
+    }, 100);
+    setShokzIntervalIds(prev => {
+      const updated = [...prev];
+      updated[idx] = spinInterval;
+      return updated;
+    });
   };
 
   // Keyboard shortcut untuk undi
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
+      if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove ') return; // Nonaktifkan shortcut
       if (event.code === 'Space') {
         event.preventDefault();
-        const currentHadiah = getCurrentHadiah();
         if (!currentHadiah) return;
-        
         const batchSize = getBatchSize(currentHadiah.jumlah);
         const startNo = batchIndex * batchSize + 1;
         const endNo = Math.min(startNo + batchSize - 1, currentHadiah.jumlah);
@@ -157,9 +236,7 @@ const Session21: React.FC = () => {
         }
       } else if (event.code === 'Enter') {
         event.preventDefault();
-        const currentHadiah = getCurrentHadiah();
         if (!currentHadiah) return;
-        
         const batchSize = getBatchSize(currentHadiah.jumlah);
         const startNo = batchIndex * batchSize + 1;
         const endNo = Math.min(startNo + batchSize - 1, currentHadiah.jumlah);
@@ -178,10 +255,79 @@ const Session21: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isDrawing, batchWinners.length, winners.length, batchIndex]);
+  }, [isDrawing, batchWinners.length, winners.length, batchIndex, currentHadiah]);
 
   // Hitung nomor box untuk batch saat ini
-  const currentHadiah = getCurrentHadiah();
+  if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove ') {
+    if (!currentHadiah) return null;
+    // Layout grid dinamis: max 3 kolom, baris menyesuaikan
+    const gridCols = currentHadiah.jumlah <= 3 ? currentHadiah.jumlah : 3;
+    const gridRows = Math.ceil(currentHadiah.jumlah / 3);
+    return (
+      <div className="flex flex-col justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: 'url(/bg.png)' }}>
+        <button
+          onClick={() => navigate('/')}
+          className="absolute top-4 left-4 px-4 py-2 w-12 h-12 bg-transparent border-transparent text-transparent hover:bg-transparent"
+        >
+          &larr;
+        </button>
+        <div className="mt-2 mb-6 text-4xl font-bold font-montserrat drop-shadow-2xl relative overflow-hidden">
+          <div className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%] bg-[position:-200%_center]">
+            {currentHadiah.nama}
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
+        </div>
+        <div
+          className={`grid gap-8 mb-8 mt-8`}
+          style={{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))`, gridTemplateRows: `repeat(${gridRows}, minmax(0, 1fr))` }}
+        >
+          {Array.from({ length: currentHadiah.jumlah }).map((_, idx) => (
+            <div
+              key={idx}
+              className={`p-4 w-[22rem] h-48 rounded-2xl text-center text-3xl flex flex-col justify-center items-center cursor-pointer select-none transition-all duration-300 transform hover:scale-105 ${
+                shokzSpinning[idx]
+                  ? 'bg-gradient-to-br from-blue-100 to-blue-300 shadow-lg shadow-blue-200/30 border border-blue-200 animate-pulse text-black'
+                  : shokzWinners[idx]
+                  ? 'bg-gradient-to-br from-blue-100 to-blue-300 shadow-lg shadow-blue-200/30 border border-blue-200 text-black'
+                  : 'bg-gradient-to-br from-slate-600 to-gray-700 shadow-md border border-slate-500 text-white opacity-80'
+              }`}
+              onClick={() => handleShokzBoxClick(idx)}
+            >
+              <div className="font-bold text-xl break-words text-center">
+                {shokzWinners[idx]?.name || (shokzSpinning[idx] ? shokzRandomNames[idx] : '') || ''}
+              </div>
+              <div className="text-base mt-1">
+                {shokzWinners[idx]?.divisi || ''}
+              </div>
+              <div className="text-base mt-1 text-gray-500">
+                {shokzWinners[idx]?.npp || ''}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="flex space-x-4 mt-10">
+          {hadiahIndex < hadiahSesi1.length - 1 && shokzWinners.every(w => w) && (
+            <button
+              onClick={handleNextHadiah}
+              className="px-6 py-3 bg-blue-500 text-white rounded text-2xl hover:bg-blue-600 opacity-0 pointer-events-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-1"
+              title="Tekan ENTER untuk lanjut hadiah"
+            >
+              Lanjut Hadiah Berikutnya
+            </button>
+          )}
+          {hadiahIndex === hadiahSesi1.length - 1 && shokzWinners.every(w => w) && (
+            <button
+              onClick={() => setHadiahIndex(hadiahSesi1.length)}
+              className="px-6 py-3 bg-transparent border-transparent text-transparent w-12 h-12 opacity-0 pointer-events-auto absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1 h-1"
+              title="Tekan ENTER untuk selesai"
+            >
+              Selesai
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
   if (!currentHadiah) {
     return (
       <div className="flex flex-col justify-center items-center h-screen bg-cover bg-center relative overflow-hidden" style={{ backgroundImage: 'url(/bg.png)' }}>
@@ -303,7 +449,7 @@ const Session21: React.FC = () => {
       </button>
       <div className="mt-2 mb-6 text-4xl font-bold font-montserrat drop-shadow-2xl relative overflow-hidden">
         <div className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%] bg-[position:-200%_center]">
-          {currentHadiah.nama} ({currentHadiah.jumlah} pemenang)
+          {currentHadiah.nama}
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
       </div>

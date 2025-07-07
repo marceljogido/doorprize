@@ -70,7 +70,7 @@ const GrandPrize: React.FC = () => {
   const displayWinner = tempWinner.name || winner.name ? (tempWinner.name ? tempWinner : winner) : null;
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: "url(/backgrounds/grandprize.jpg)" }}>
+    <div className="flex flex-col justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: "url(/backgrounds/bgbg.jpg)" }}>
       <TrophyRain />
       <button
         onClick={() => navigate('/')}
@@ -91,10 +91,10 @@ const GrandPrize: React.FC = () => {
           }`}
           onClick={handleBoxClick}
         >
-          <div className="font-bold text-2xl break-words text-center">
-            {displayWinner ? displayWinner.name : 'Grand Prize Box'}
+          <div className="font-bold text-3xl break-words text-center" style={{color: 'white', textShadow: '0 0 10px #fff'}}>
+            {displayWinner ? displayWinner.name : 'Mulai Undian Sekarang'}
           </div>
-          <div className="text-lg mt-1">
+        <div className="text-lg mt-1">
             {displayWinner ? displayWinner.divisi : ''}
           </div>
           <div className="text-base mt-1 italic text-gray-200">

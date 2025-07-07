@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 const hadiahSesi3 = [
   { nama: 'SAMSUNG SMARTPHONE GALAXY A16', jumlah: 6 },
-  { nama: '43\" QLED QEF1 4K Samsung Vision AI Smart TV', jumlah: 6 },
-  { nama: 'Polygon Path 2', jumlah: 4 },
-  { nama: 'Ninebot E22', jumlah: 3 },
+  { nama: 'UA 43DU 8000 43Inch - TV SAMSUNG', jumlah: 6 },
+  { nama: 'UWinfly D65', jumlah: 4 },
+  { nama: 'SWY Nine BOOT F2', jumlah: 3 },
 ];
 
 const Session23: React.FC = () => {

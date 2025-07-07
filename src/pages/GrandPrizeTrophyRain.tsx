@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 
-const TROPHY_COUNT = 20;
-const TROPHY_SIZE = 0.3;
-const FALL_SPEED = 0.03;
+const TROPHY_COUNT = 30;
+const TROPHY_SIZE = 0.5;
+const FALL_SPEED = 0.02;
 
 const TrophyRain: React.FC = () => {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -32,21 +32,42 @@ const TrophyRain: React.FC = () => {
 
     // Load trophy texture
     const loader = new THREE.TextureLoader();
-    loader.load('/piala.svg', (texture: THREE.Texture) => {
-      const trophies: THREE.Sprite[] = [];
-      for (let i = 0; i < TROPHY_COUNT; i++) {
-        const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
-        const sprite = new THREE.Sprite(material);
-        sprite.scale.set(TROPHY_SIZE, TROPHY_SIZE, 1);
-        sprite.position.x = (Math.random() - 0.5) * 8;
-        sprite.position.y = Math.random() * 6 + 2;
-        sprite.position.z = (Math.random() - 0.5) * 2;
-        scene.add(sprite);
-        trophies.push(sprite);
+    loader.load(
+      '/piala.svg',
+      (texture: THREE.Texture) => {
+        const trophies: THREE.Sprite[] = [];
+        for (let i = 0; i < TROPHY_COUNT; i++) {
+          const material = new THREE.SpriteMaterial({ map: texture, transparent: true });
+          const sprite = new THREE.Sprite(material);
+          sprite.scale.set(TROPHY_SIZE, TROPHY_SIZE, 1);
+          sprite.position.x = (Math.random() - 0.5) * 8;
+          sprite.position.y = Math.random() * 6 + 2;
+          sprite.position.z = (Math.random() - 0.5) * 2;
+          scene.add(sprite);
+          trophies.push(sprite);
+        }
+        trophiesRef.current = trophies;
+        animate();
+      },
+      undefined,
+      (err) => {
+        console.error('Gagal memuat /piala.svg:', err);
+        // Fallback: gunakan sprite warna emas polos
+        const trophies: THREE.Sprite[] = [];
+        const fallbackMaterial = new THREE.SpriteMaterial({ color: 0xFFD700 }); // warna emas
+        for (let i = 0; i < TROPHY_COUNT; i++) {
+          const sprite = new THREE.Sprite(fallbackMaterial);
+          sprite.scale.set(TROPHY_SIZE, TROPHY_SIZE, 1);
+          sprite.position.x = (Math.random() - 0.5) * 8;
+          sprite.position.y = Math.random() * 6 + 2;
+          sprite.position.z = (Math.random() - 0.5) * 2;
+          scene.add(sprite);
+          trophies.push(sprite);
+        }
+        trophiesRef.current = trophies;
+        animate();
       }
-      trophiesRef.current = trophies;
-      animate();
-    });
+    );
 
     function animate() {
       animationRef.current = requestAnimationFrame(animate);

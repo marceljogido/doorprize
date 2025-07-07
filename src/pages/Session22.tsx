@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 const hadiahSesi2 = [
   { nama: 'Huawei Watch Fit 4', jumlah: 6 },
-  { nama: 'Samsung Tab A9 LTE', jumlah: 6 },
+  { nama: 'Samsung Tab A9 (Wifi)', jumlah: 6 },
   { nama: 'LM 0,5 Gram', jumlah: 6 },
   { nama: 'LM 1 Gram', jumlah: 3 },
-  { nama: 'Motorola G45', jumlah: 6 },
+  { nama: 'VIVO Y29 6GB - 128', jumlah: 6 },
 ];
 
 const Session22: React.FC = () => {
