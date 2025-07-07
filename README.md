@@ -9,6 +9,7 @@ Aplikasi doorprize digital untuk event digiOH yang dibangun dengan React dan Typ
 - Grand prize dengan efek trophy rain
 - Import data peserta dari file Excel
 - UI yang responsif dan modern
+- Integrasi Three.js untuk animasi 3D
 
 ## Teknologi yang Digunakan
 
@@ -19,32 +20,51 @@ Aplikasi doorprize digital untuk event digiOH yang dibangun dengan React dan Typ
 - Three.js untuk animasi 3D
 - XLSX untuk membaca file Excel
 
-## Cara Menjalankan
+## Cara Instalasi & Menjalankan
 
-1. Install dependencies:
-```bash
-npm install
-```
+1. **Clone repository**
+   ```bash
+   git clone https://github.com/marceljogido/doorprize.git
+   cd doorprize
+   ```
 
-2. Jalankan aplikasi:
-```bash
-npm start
-```
+2. **Install dependency**
+   ```bash
+   npm install
+   ```
 
-3. Buka browser dan akses `http://localhost:3000`
+3. **Install Three.js (jika belum otomatis terinstall)**
+   ```bash
+   npm install three
+   ```
+   > Jika sudah ada di package.json, langkah ini bisa dilewati.
+
+4. **Jalankan aplikasi**
+   ```bash
+   npm start
+   ```
+
+5. **Akses aplikasi**
+   Buka browser ke [http://localhost:3000](http://localhost:3000)
 
 ## Struktur Proyek
 
 ```
 src/
 ├── components/     # Komponen React
-├── pages/         # Halaman aplikasi
-├── context/       # Context API
-├── routes/        # Konfigurasi routing
-└── utils/         # Utility functions
-public/            # Asset statis
-package.json       # Dependencies dan scripts
+├── pages/          # Halaman aplikasi
+├── context/        # Context API
+├── routes/         # Konfigurasi routing
+└── utils/          # Utility functions
+public/             # Asset statis
+package.json        # Dependencies dan scripts
 ```
+
+## Catatan
+
+- Pastikan Node.js & npm sudah terinstall di komputer Anda.
+- Untuk pengembangan animasi, cek dokumentasi [Three.js](https://threejs.org/docs/).
+- Untuk import data peserta, gunakan template Excel yang tersedia di folder `public/template/`.
 
 ## Lisensi
 
