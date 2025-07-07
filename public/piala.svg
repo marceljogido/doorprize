@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="#FFCA28">
+  <!-- Trophy -->
+  <path d="M5 2v2H3v4a5 5 0 0 0 5 5v1H8v2h2v2H9v2h6v-2h-1v-2h2v-2h-1v-1h1a5 5 0 0 0 5-5V4h-2V2zM5 6h1v2H5zm13 0h1v2h-1z"/>
+  <!-- Star in center -->
+  <path fill="#fff" d="M12 8l.5 1.5H14l-1.25.9.5 1.5L12 11l-1.25.9.5-1.5L10 9.5h1.5z"/>
+</svg> 
