@@ -5,7 +5,7 @@ Aplikasi doorprize digital untuk event digiOH yang dibangun dengan React dan Typ
 ## Fitur
 
 - Sistem doorprize digital dengan animasi menarik
-- Multiple session doorprize (Session 21, 22, 23)
+- Banyak sesi doorprize 
 - Grand prize dengan efek trophy rain
 - Import data peserta dari file Excel
 - UI yang responsif dan modern
@@ -66,6 +66,3 @@ package.json        # Dependencies dan scripts
 - Untuk pengembangan animasi, cek dokumentasi [Three.js](https://threejs.org/docs/).
 - Untuk import data peserta, gunakan template Excel yang tersedia di folder `public/template/`.
 
-## Lisensi
-
-Proyek ini dibuat untuk event digiOH.
