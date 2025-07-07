@@ -50,7 +50,13 @@ const Session23: React.FC = () => {
       winners.forEach((w, i) => {
         if (w && i !== idx) remaining = remaining.filter(g => g.name !== w.name);
       });
-      const winner = remaining[Math.floor(Math.random() * remaining.length)];
+      // Tambahkan filter khusus untuk UWinfly D65
+      const currentHadiah = getCurrentHadiah();
+      let eligible = remaining;
+      if (currentHadiah && currentHadiah.nama === 'UWinfly D65') {
+        eligible = remaining.filter(g => g.npp && !isNaN(Number(g.npp)) && Number(g.npp) > 0);
+      }
+      const winner = eligible[Math.floor(Math.random() * eligible.length)];
       if (winner) {
         setWinners(prev => {
           const updated = [...prev];
@@ -254,7 +260,7 @@ const Session23: React.FC = () => {
       >
         &larr;
       </button>
-      <div className="mt-2 mb-6 text-4xl font-bold font-montserrat drop-shadow-2xl relative overflow-hidden">
+      <div className="mt-2 mb-6 text-6xl font-extrabold font-montserrat drop-shadow-2xl relative overflow-hidden">
         <div className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%] bg-[position:-200%_center]">
           {currentHadiah.nama}
         </div>

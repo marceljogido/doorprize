@@ -35,8 +35,11 @@ const GrandPrize: React.FC = () => {
     setTempWinner({ name: '', divisi: '', npp: '' });
     setIsDrawing(true);
 
+    // Filter tamu yang eligible (npp angka dan > 0)
+    const eligibleGuests = guests.filter(g => g.npp && !isNaN(Number(g.npp)) && Number(g.npp) > 0);
+
     const newIntervalId = setInterval(() => {
-      const randomGuest = guests[Math.floor(Math.random() * guests.length)];
+      const randomGuest = eligibleGuests[Math.floor(Math.random() * eligibleGuests.length)];
       setTempWinner(randomGuest);
     }, 100);
 
@@ -48,7 +51,9 @@ const GrandPrize: React.FC = () => {
       clearInterval(intervalId);
       setIntervalId(null);
     }
-    const randomGuest = guests[Math.floor(Math.random() * guests.length)];
+    // Filter tamu yang eligible (npp angka dan > 0)
+    const eligibleGuests = guests.filter(g => g.npp && !isNaN(Number(g.npp)) && Number(g.npp) > 0);
+    const randomGuest = eligibleGuests[Math.floor(Math.random() * eligibleGuests.length)];
     setWinner(randomGuest);
     setTempWinner(randomGuest);
     removeGuest(randomGuest.name);
@@ -70,7 +75,7 @@ const GrandPrize: React.FC = () => {
   const displayWinner = tempWinner.name || winner.name ? (tempWinner.name ? tempWinner : winner) : null;
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: "url(/backgrounds/bgbg.jpg)" }}>
+    <div className="flex flex-col justify-center items-center h-screen bg-cover bg-center" style={{ backgroundImage: "url(/backgrounds/bgbg.jpg)", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", minHeight: "100vh", width: "100%" }}>
       <TrophyRain />
       <button
         onClick={() => navigate('/')}

@@ -59,7 +59,7 @@ const Session21: React.FC = () => {
     setBatchWinners([]);
     const batchSize = currentHadiah ? getBatchSize(currentHadiah.jumlah) : BATCH_SIZE;
     setRandomNames(Array(batchSize).fill(''));
-    if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove ') {
+    if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove') {
       setShokzWinners(Array(currentHadiah.jumlah).fill(null));
       setShokzSpinning(Array(currentHadiah.jumlah).fill(false));
       setShokzRandomNames(Array(currentHadiah.jumlah).fill(''));
@@ -220,7 +220,7 @@ const Session21: React.FC = () => {
   // Keyboard shortcut untuk undi
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove ') return; // Nonaktifkan shortcut
+      if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove') return; // Nonaktifkan shortcut
       if (event.code === 'Space') {
         event.preventDefault();
         if (!currentHadiah) return;
@@ -258,7 +258,7 @@ const Session21: React.FC = () => {
   }, [isDrawing, batchWinners.length, winners.length, batchIndex, currentHadiah]);
 
   // Hitung nomor box untuk batch saat ini
-  if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove ') {
+  if (currentHadiah && currentHadiah.nama === 'Shokz Bone Conduction OpenMove') {
     if (!currentHadiah) return null;
     // Layout grid dinamis: max 3 kolom, baris menyesuaikan
     const gridCols = currentHadiah.jumlah <= 3 ? currentHadiah.jumlah : 3;
@@ -271,7 +271,7 @@ const Session21: React.FC = () => {
         >
           &larr;
         </button>
-        <div className="mt-2 mb-6 text-4xl font-bold font-montserrat drop-shadow-2xl relative overflow-hidden">
+        <div className="mt-2 mb-16 text-6xl font-extrabold font-montserrat drop-shadow-2xl relative overflow-hidden">
           <div className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%] bg-[position:-200%_center]">
             {currentHadiah.nama}
           </div>
@@ -447,7 +447,7 @@ const Session21: React.FC = () => {
       >
         &larr;
       </button>
-      <div className="mt-2 mb-6 text-4xl font-bold font-montserrat drop-shadow-2xl relative overflow-hidden">
+      <div className="mt-2 mb-16 text-6xl font-extrabold font-montserrat drop-shadow-2xl relative overflow-hidden">
         <div className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%] bg-[position:-200%_center]">
           {currentHadiah.nama}
         </div>

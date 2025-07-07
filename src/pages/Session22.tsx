@@ -254,7 +254,7 @@ const Session22: React.FC = () => {
       >
         &larr;
       </button>
-      <div className="mt-2 mb-6 text-4xl font-bold font-montserrat drop-shadow-2xl relative overflow-hidden">
+      <div className="mt-2 mb-6 text-6xl font-extrabold font-montserrat drop-shadow-2xl relative overflow-hidden">
         <div className="bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%] bg-[position:-200%_center]">
           {currentHadiah.nama}
         </div>
