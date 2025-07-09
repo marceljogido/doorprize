@@ -4,6 +4,7 @@ interface Guest {
   name: string;
   divisi: string;
   npp: string;
+  status: string;
 }
 
 export const readExcel = (file: ArrayBuffer): Guest[] => {
@@ -19,16 +20,18 @@ export const readExcel = (file: ArrayBuffer): Guest[] => {
     const nameCell = sheet[`A${rowIndex}`];
     const divisiCell = sheet[`B${rowIndex}`];
     const nppCell = sheet[`C${rowIndex}`];
+    const statusCell = sheet[`D${rowIndex}`];
 
-    if (!nameCell || !divisiCell || !nppCell) {
+    if (!nameCell && !divisiCell && !nppCell && !statusCell) {
       break;
     }
 
-    const name = nameCell.v;
-    const divisi = divisiCell.v;
-    const npp = String(nppCell.v);
+    const name = nameCell ? nameCell.v : '';
+    const divisi = divisiCell ? divisiCell.v : '';
+    const npp = nppCell ? String(nppCell.v) : '';
+    const status = statusCell ? statusCell.v : '';
 
-    guests.push({ name, divisi, npp });
+    guests.push({ name, divisi, npp, status });
     rowIndex++;
   }
 

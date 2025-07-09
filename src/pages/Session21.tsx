@@ -3,7 +3,7 @@ import { useGuests } from '../context/GuestContext';
 import { useNavigate } from 'react-router-dom';
 
 const hadiahSesi1 = [
-  { nama: 'Voucher 100k', jumlah: 80 },
+  { nama: 'Voucher 100k', jumlah: 75 },
   { nama: 'Voucher 300k', jumlah: 60 },
   { nama: 'Voucher 500k', jumlah: 15 },
   { nama: 'Shokz Bone Conduction OpenMove', jumlah: 6 },
@@ -299,9 +299,10 @@ const Session21: React.FC = () => {
               <div className="text-base mt-1">
                 {shokzWinners[idx]?.divisi || ''}
               </div>
-              <div className="text-base mt-1 text-gray-500">
-                {shokzWinners[idx]?.npp || ''}
-              </div>
+                          {/* NPP disembunyikan dari tampilan pemenang */}
+            {/* <div className="text-base mt-1 text-gray-500">
+              {shokzWinners[idx]?.npp || ''}
+            </div> */}
             </div>
           ))}
         </div>
@@ -485,9 +486,10 @@ const Session21: React.FC = () => {
             <div className="text-base mt-1">
               {batchWinners[idx]?.divisi || ''}
             </div>
-            <div className="text-base mt-1 text-gray-500">
+            {/* NPP disembunyikan dari tampilan pemenang */}
+            {/* <div className="text-base mt-1 text-gray-500">
               {batchWinners[idx]?.npp || ''}
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

@@ -50,13 +50,7 @@ const Session23: React.FC = () => {
       winners.forEach((w, i) => {
         if (w && i !== idx) remaining = remaining.filter(g => g.name !== w.name);
       });
-      // Tambahkan filter khusus untuk UWinfly D65
-      const currentHadiah = getCurrentHadiah();
-      let eligible = remaining;
-      if (currentHadiah && currentHadiah.nama === 'UWinfly D65') {
-        eligible = remaining.filter(g => g.npp && !isNaN(Number(g.npp)) && Number(g.npp) > 0);
-      }
-      const winner = eligible[Math.floor(Math.random() * eligible.length)];
+      const winner = remaining[Math.floor(Math.random() * remaining.length)];
       if (winner) {
         setWinners(prev => {
           const updated = [...prev];
@@ -288,9 +282,10 @@ const Session23: React.FC = () => {
             <div className="text-base mt-1">
               {winners[idx]?.divisi || ''}
             </div>
-            <div className="text-base mt-1 text-gray-500">
+            {/* NPP disembunyikan dari tampilan pemenang */}
+            {/* <div className="text-base mt-1 text-gray-500">
               {winners[idx]?.npp || ''}
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

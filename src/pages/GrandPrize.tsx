@@ -18,7 +18,7 @@ const GrandPrize: React.FC = () => {
       // Confetti sederhana: generate 40 elemen confetti
       const confettiContainer = confettiRef.current;
       confettiContainer.innerHTML = '';
-      for (let i = 0; i < 40; i++) {
+      for (let i = 0; i < 500; i++) {
         const conf = document.createElement('div');
         conf.className = 'confetti';
         conf.style.left = Math.random() * 100 + '%';
@@ -35,8 +35,8 @@ const GrandPrize: React.FC = () => {
     setTempWinner({ name: '', divisi: '', npp: '' });
     setIsDrawing(true);
 
-    // Filter tamu yang eligible (npp angka dan > 0)
-    const eligibleGuests = guests.filter(g => g.npp && !isNaN(Number(g.npp)) && Number(g.npp) > 0);
+    // Semua tamu eligible (tanpa filter status)
+    const eligibleGuests = guests;
 
     const newIntervalId = setInterval(() => {
       const randomGuest = eligibleGuests[Math.floor(Math.random() * eligibleGuests.length)];
@@ -51,8 +51,8 @@ const GrandPrize: React.FC = () => {
       clearInterval(intervalId);
       setIntervalId(null);
     }
-    // Filter tamu yang eligible (npp angka dan > 0)
-    const eligibleGuests = guests.filter(g => g.npp && !isNaN(Number(g.npp)) && Number(g.npp) > 0);
+    // Semua tamu eligible (tanpa filter status)
+    const eligibleGuests = guests;
     const randomGuest = eligibleGuests[Math.floor(Math.random() * eligibleGuests.length)];
     setWinner(randomGuest);
     setTempWinner(randomGuest);
@@ -102,9 +102,10 @@ const GrandPrize: React.FC = () => {
         <div className="text-lg mt-1">
             {displayWinner ? displayWinner.divisi : ''}
           </div>
-          <div className="text-base mt-1 italic text-gray-200">
+          {/* NPP disembunyikan dari tampilan pemenang */}
+          {/* <div className="text-base mt-1 italic text-gray-200">
             {displayWinner ? displayWinner.npp : ''}
-          </div>
+          </div> */}
         </div>
       </div>
       {/* Popup Modal */}
@@ -122,7 +123,8 @@ const GrandPrize: React.FC = () => {
             </svg>
             <div className="text-5xl font-extrabold text-teal-700 mb-4 text-center break-words max-w-[500px] animate-bounce-winner drop-shadow-lg" style={{textShadow:'0 0 10px #fff, 0 0 20px #fbbf24'}}>{winner.name}</div>
             <div className="text-2xl text-pink-600 mb-2 font-semibold animate-fadein">{winner.divisi}</div>
-            <div className="text-lg text-gray-700 mb-2 animate-fadein">{winner.npp}</div>
+            {/* NPP disembunyikan dari tampilan pemenang */}
+            {/* <div className="text-lg text-gray-700 mb-2 animate-fadein">{winner.npp}</div> */}
             <button
               onClick={() => setShowPopup(false)}
               className="mt-4 px-8 py-3 bg-teal-500 text-white rounded-lg text-xl font-bold shadow-lg hover:bg-teal-600 hover:scale-105 transition-transform"

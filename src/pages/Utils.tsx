@@ -12,7 +12,7 @@ const Utils: React.FC = () => {
   const getGuests = async () => {
     try {
       // Ambil file Excel dari public
-      const response = await fetch('/template/antam-data.xlsx');
+      const response = await fetch('/template/antam-data2025.xlsx');
       if (!response.ok) throw new Error('Gagal mengambil file Excel dari public!');
       const arrayBuffer = await response.arrayBuffer();
       const data = new Uint8Array(arrayBuffer);
@@ -25,18 +25,14 @@ const Utils: React.FC = () => {
         const nameCell = sheet[`A${rowIndex}`];
         const divisiCell = sheet[`B${rowIndex}`];
         const nppCell = sheet[`C${rowIndex}`];
-        if (!nameCell || !divisiCell || !nppCell) break;
-        if (
-          typeof nameCell.v === 'string' &&
-          typeof divisiCell.v === 'string' &&
-          (typeof nppCell.v === 'string' || typeof nppCell.v === 'number')
-        ) {
-          importedGuests.push({
-            name: nameCell.v,
-            divisi: divisiCell.v,
-            npp: String(nppCell.v),
-          });
-        }
+        const statusCell = sheet[`D${rowIndex}`];
+        if (!nameCell && !divisiCell && !nppCell && !statusCell) break;
+        importedGuests.push({
+          name: nameCell ? nameCell.v : '',
+          divisi: divisiCell ? divisiCell.v : '',
+          npp: nppCell ? String(nppCell.v) : '',
+          status: statusCell ? statusCell.v : '',
+        });
         rowIndex++;
       }
       setGuests(importedGuests);
@@ -50,15 +46,15 @@ const Utils: React.FC = () => {
 
   const exportToExcel = () => {
     try {
-      const storedGuests: { name: string; divisi: string; npp: string }[] = JSON.parse(localStorage.getItem('guests') || '[]');
+      const storedGuests: { name: string; divisi: string; npp: string; status: string }[] = JSON.parse(localStorage.getItem('guests') || '[]');
       if (!storedGuests.length) {
         setStatus('Tidak ada data tamu untuk diekspor!');
         return;
       }
-      const formattedGuests = storedGuests.map((guest) => [guest.name, guest.divisi, guest.npp]);
+      const formattedGuests = storedGuests.map((guest) => [guest.name, guest.divisi, guest.npp, guest.status]);
       const ws = XLSX.utils.aoa_to_sheet([
         [],
-        ['Nama', 'Divisi', 'NPP'],
+        ['Nama', 'Divisi', 'NPP', 'Status'],
         ...formattedGuests
       ]);
       const wb = XLSX.utils.book_new();
@@ -101,18 +97,14 @@ const Utils: React.FC = () => {
         const nameCell = sheet[`A${rowIndex}`];
         const divisiCell = sheet[`B${rowIndex}`];
         const nppCell = sheet[`C${rowIndex}`];
-        if (!nameCell || !divisiCell || !nppCell) break;
-        if (
-          typeof nameCell.v === 'string' &&
-          typeof divisiCell.v === 'string' &&
-          (typeof nppCell.v === 'string' || typeof nppCell.v === 'number')
-        ) {
-          importedGuests.push({
-            name: nameCell.v,
-            divisi: divisiCell.v,
-            npp: String(nppCell.v),
-          });
-        }
+        const statusCell = sheet[`D${rowIndex}`];
+        if (!nameCell && !divisiCell && !nppCell && !statusCell) break;
+        importedGuests.push({
+          name: nameCell ? nameCell.v : '',
+          divisi: divisiCell ? divisiCell.v : '',
+          npp: nppCell ? String(nppCell.v) : '',
+          status: statusCell ? statusCell.v : '',
+        });
         rowIndex++;
       }
       setGuests(importedGuests);
@@ -249,6 +241,7 @@ const Utils: React.FC = () => {
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Nama</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Divisi</th>
                   <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">NPP</th>
+                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Status</th>
                   <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Aksi</th>
                 </tr>
               </thead>
@@ -266,6 +259,7 @@ const Utils: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{guest.name}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{guest.divisi}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{guest.npp}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{guest.status}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
                         <button
                           onClick={() => removeGuest(guest.name)}

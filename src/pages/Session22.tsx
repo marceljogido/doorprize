@@ -282,9 +282,10 @@ const Session22: React.FC = () => {
             <div className="text-base mt-1">
               {winners[idx]?.divisi || ''}
             </div>
-            <div className="text-base mt-1 text-gray-500">
+            {/* NPP disembunyikan dari tampilan pemenang */}
+            {/* <div className="text-base mt-1 text-gray-500">
               {winners[idx]?.npp || ''}
-            </div>
+            </div> */}
           </div>
         ))}
       </div>

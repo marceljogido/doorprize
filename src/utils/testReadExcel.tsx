@@ -9,7 +9,7 @@ const ImportGuests: React.FC = () => {
   useEffect(() => {
     const fetchExcelFile = async () => {
       try {
-        const response = await fetch('../template/guests.xlsx');
+        const response = await fetch('/template/doorprize-excel-template.xlsx');
         if (!response.ok) {
           throw new Error('Failed to fetch the file');
         }
