@@ -164,30 +164,6 @@ const Utils: React.FC = () => {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">Aksi Utama</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-            <button
-              onClick={getGuests}
-              className="px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
-            >
-              📥 Ambil Data Tamu
-            </button>
-            <button
-              onClick={exportToExcel}
-              className="px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 font-medium"
-            >
-              📤 Ekspor ke Excel
-            </button>
-            <button
-              onClick={deleteAllGuests}
-              className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium"
-            >
-              🗑️ Hapus Semua Data
-            </button>
-            <button
-              onClick={downloadTemplate}
-              className="px-4 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200 font-medium"
-            >
-              📋 Download Template
-            </button>
             <label className="px-4 py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-200 font-medium cursor-pointer flex items-center justify-center">
               📁 Import dari Excel
               <input
@@ -197,6 +173,18 @@ const Utils: React.FC = () => {
                 className="hidden"
               />
             </label>
+            <button
+              onClick={downloadTemplate}
+              className="px-4 py-3 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200 font-medium"
+            >
+              📋 Download Template
+            </button>
+            <button
+              onClick={deleteAllGuests}
+              className="px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-200 font-medium"
+            >
+              🗑️ Hapus Semua Data
+            </button>
           </div>
         </div>
 
@@ -234,36 +222,44 @@ const Utils: React.FC = () => {
             <h2 className="text-xl font-semibold text-gray-800">Daftar Tamu ({filteredGuests.length} data)</h2>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
+            <table className="min-w-full table-fixed border border-gray-200 rounded-lg shadow-sm">
+              <colgroup>
+                <col style={{ width: '4%' }} /> {/* No */}
+                <col style={{ width: '28%' }} /> {/* Nama */}
+                <col style={{ width: '22%' }} /> {/* Divisi */}
+                <col style={{ width: '16%' }} /> {/* NPP */}
+                <col style={{ width: '15%' }} /> {/* Status */}
+                <col style={{ width: '15%' }} /> {/* Aksi */}
+              </colgroup>
+              <thead className="bg-gradient-to-r from-blue-100 to-blue-200">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">No</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Nama</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Divisi</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">NPP</th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Status</th>
-                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-b">Aksi</th>
+                  <th className="px-2 py-3 text-left text-xs font-bold text-blue-700 uppercase tracking-wider border-b">No</th>
+                  <th className="px-2 py-3 text-left text-xs font-bold text-blue-700 uppercase tracking-wider border-b">Nama</th>
+                  <th className="px-2 py-3 text-left text-xs font-bold text-blue-700 uppercase tracking-wider border-b">Divisi</th>
+                  <th className="px-2 py-3 text-left text-xs font-bold text-blue-700 uppercase tracking-wider border-b">NPP</th>
+                  <th className="px-2 py-3 text-left text-xs font-bold text-blue-700 uppercase tracking-wider border-b">Status</th>
+                  <th className="px-2 py-3 text-center text-xs font-bold text-blue-700 uppercase tracking-wider border-b">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-100">
                 {filteredGuests.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                    <td colSpan={6} className="px-2 py-8 text-center text-gray-400">
                       {search ? 'Tidak ada data yang sesuai dengan pencarian.' : 'Tidak ada data tamu.'}
                     </td>
                   </tr>
                 ) : (
                   filteredGuests.map((guest, idx) => (
-                    <tr key={guest.name + guest.npp} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">{idx + 1}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{guest.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{guest.divisi}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{guest.npp}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{guest.status}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <tr key={guest.name + guest.npp} className="hover:bg-blue-50 transition-all duration-200">
+                      <td className="px-2 py-3 text-sm text-gray-900 font-semibold text-center align-top">{idx + 1}</td>
+                      <td className="px-2 py-3 text-sm text-gray-900 break-words align-top max-w-[180px]">{guest.name}</td>
+                      <td className="px-2 py-3 text-sm text-gray-900 break-words align-top max-w-[140px]">{guest.divisi}</td>
+                      <td className="px-2 py-3 text-sm text-gray-900 text-center align-top max-w-[100px]">{guest.npp}</td>
+                      <td className="px-2 py-3 text-sm text-gray-900 text-center align-top max-w-[100px]">{guest.status}</td>
+                      <td className="px-2 py-3 text-center align-top">
                         <button
                           onClick={() => removeGuest(guest.name)}
-                          className="px-3 py-1 bg-red-400 text-white rounded-md hover:bg-red-600 transition-colors duration-200 text-xs font-medium"
+                          className="px-3 py-1 bg-gradient-to-r from-red-400 to-pink-500 text-white rounded-md hover:from-red-500 hover:to-pink-600 shadow-sm transition-all duration-200 text-xs font-bold"
                         >
                           Hapus
                         </button>
